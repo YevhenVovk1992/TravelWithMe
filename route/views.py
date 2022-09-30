@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from route import forms
+from route import models
 
 
 # Create your views here.
@@ -18,8 +19,10 @@ def route_filter(request, route_type=None, country=None, location=None):
 
 
 def add_route(request):
+    form = forms.RouteForm()
     data = {
-        'title': 'Add New Route'
+        'title': 'Add New Route',
+        'form': form
     }
     return render(request, 'route/add_route.html', data)
 

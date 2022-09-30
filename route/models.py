@@ -7,6 +7,9 @@ class Place(models.Model):
     name = models.CharField(max_length=120, null=False)
     info = models.TextField(null=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Route(models.Model):
     class RouteType(models.TextChoices):
@@ -22,6 +25,7 @@ class Route(models.Model):
     location = models.CharField(max_length=120, null=False)
     description = models.TextField(null=True)
     duration = models.IntegerField(null=False, default=7)
+
 
 
 class Event(models.Model):
