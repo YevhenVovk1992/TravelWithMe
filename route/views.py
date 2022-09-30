@@ -1,14 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from route import forms
+
 
 # Create your views here.
 
 def index(request):
     data = {
-        'title': 'TravelWithMe'
+        'title': 'TravelWithMe',
     }
     return render(request, 'route/index.html', data)
+
 
 def route_filter(request, route_type=None, country=None, location=None):
     return HttpResponse(f'<h3>{route_type}-{country}-{location}</h3>')
