@@ -23,3 +23,11 @@ class Route(models.Model):
     description = models.TextField(null=True)
     duration = models.IntegerField(null=False, default=7)
 
+
+class Event(models.Model):
+    id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
+    event_admin = models.IntegerField()
+    approved_users = models.TextField(null=True)
+    pending_users = models.TextField(null=True)
+    start_date = models.DateField(null=False)
+    price = models.IntegerField(null=True)
