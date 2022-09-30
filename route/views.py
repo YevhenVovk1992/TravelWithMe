@@ -15,7 +15,10 @@ def route_filter(request, route_type=None, country=None, location=None):
 
 
 def add_route(request):
-    return HttpResponse('Create new route')
+    data = {
+        'title': 'Add New Route'
+    }
+    return render(request, 'route/add_route.html', data)
 
 
 def route_detail(request, id_route):
@@ -27,7 +30,10 @@ def route_review(request, id_route):
 
 
 def route_add_event(request, id_route):
-    return HttpResponse(f'<h3>{id_route}</h3>')
+    data = {
+        'title': 'Add New Event'
+    }
+    return render(request, 'route/add_event.html', data)
 
 
 def event_handler(request, event_id):
