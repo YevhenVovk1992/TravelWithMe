@@ -1,0 +1,21 @@
+{% extends 'route/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block title %}title{% endblock %}
+
+{% block content %}
+        <!-- Signup-->
+        <section class="signup-section" id="signup">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-10 col-lg-8 mx-auto text-center">
+                        <i class="fa fa-check fa-2x mb-2 text-white"></i>
+                        <h2 class="text-white mb-5">Operation status</h2>
+                        <h3>{{ operation_status }}</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

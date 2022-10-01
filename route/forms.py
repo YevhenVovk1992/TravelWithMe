@@ -4,9 +4,9 @@ from route import models
 
 class EventForm(forms.ModelForm):
 
-    id_route = forms.ModelMultipleChoiceField(queryset=models.Route.objects.all())
-    event_admin = forms.IntegerField(label='event_admin')
-    start_date = forms.DateField()
+    id_route = forms.ModelMultipleChoiceField(queryset=models.Route.objects.all(), label='Route')
+    event_admin = forms.IntegerField(label='Event admin')
+    start_date = forms.DateField(label='Date', widget=forms.DateInput(attrs={'type': 'date'}))
     price = forms.IntegerField(label='Price')
 
     class Meta:

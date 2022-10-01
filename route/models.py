@@ -18,7 +18,7 @@ class Route(models.Model):
         Motor = 'Motor', gettext_lazy('Motor')
 
     start_point = models.ForeignKey(Place, null=False, related_name='start_route', on_delete=models.RESTRICT)
-    stop_point = models.JSONField()
+    stop_point = models.JSONField(null=True)
     destination = models.ForeignKey(Place, null=False, related_name='stop_route', on_delete=models.RESTRICT)
     route_type = models.CharField(max_length=50, choices=RouteType.choices, default=RouteType.ByFoot, null=False)
     country = models.CharField(max_length=50, null=False)
@@ -26,6 +26,8 @@ class Route(models.Model):
     description = models.TextField(null=True)
     duration = models.IntegerField(null=False, default=7)
 
+    def __str__(self):
+        return f'{self.route_type}-{self.country}-{self.location}-{self.start_point}-{self.destination}'
 
 
 class Event(models.Model):

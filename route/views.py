@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from route import forms
@@ -20,11 +20,35 @@ def route_filter(request, route_type=None, country=None, location=None):
 
 def add_route(request):
     form = forms.RouteForm()
-    data = {
-        'title': 'Add New Route',
-        'form': form
-    }
-    return render(request, 'route/add_route.html', data)
+    if request.method == 'GET':
+        data = {
+            'title': 'Add New Route',
+            'form': form,
+            'anchor': 'signup'
+        }
+        return render(request, 'route/add_route.html', data)
+    if request.method == 'POST':
+        data = {
+            'title': 'Add New Route',
+            'anchor': '#signup',
+            'operation_status': 'Operation successful'
+        }
+        try:
+            new_route = models.Route(
+                start_point=models.Place.objects.filter(id=request.POST.get('start_point'))[0],
+                destination=models.Place.objects.filter(id=request.POST.get('destination'))[0],
+                route_type=request.POST.get('route_type'),
+                country=request.POST.get('country'),
+                location=request.POST.get('location'),
+                description=request.POST.get('description'),
+                duration=request.POST.get('duration')
+            )
+            new_route.save()
+        except Exception as error:
+            data['operation_status'] = error
+            return render(request, 'route/error.html', data)
+        else:
+            return render(request, 'route/successful.html', data)
 
 
 def route_detail(request, id_route):
@@ -36,10 +60,32 @@ def route_review(request, id_route):
 
 
 def route_add_event(request, id_route):
-    data = {
-        'title': 'Add New Event'
-    }
-    return render(request, 'route/add_event.html', data)
+    if request.method == 'GET':
+        form = forms.EventForm()
+        data = {
+            'title': 'Add New Event',
+            'form': form
+        }
+        return render(request, 'route/add_event.html', data)
+    if request.method == 'POST':
+        data = {
+            'title': 'Add New Event',
+            'anchor': '#signup',
+            'operation_status': 'Operation successful'
+        }
+        try:
+            new_event = models.Event(
+                id_route=models.Route.objects.filter(id=request.POST.get('id_route'))[0],
+                event_admin=request.POST.get('event_admin'),
+                start_date=request.POST.get('start_date'),
+                price=request.POST.get('price')
+            )
+            new_event.save()
+        except Exception as error:
+            data['operation_status'] = error
+            return render(request, 'route/error.html', data)
+        else:
+            return render(request, 'route/successful.html', data)
 
 
 def event_handler(request, event_id):

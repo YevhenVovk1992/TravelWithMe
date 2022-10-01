@@ -12,15 +12,9 @@
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-md-10 col-lg-8 mx-auto text-center">
                         <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-                        <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- * * SB Forms Contact Form * *-->
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- This form is pre-integrated with SB Forms.-->
-                        <!-- To make this form functional, sign up at-->
-                        <!-- https://startbootstrap.com/solution/contact-forms-->
+                        <h2 class="text-white mb-5">Create a new route</h2>
 
-                        <form method="post" novalidate>
+                        <form method="post" >
                             {% csrf_token %}
                             <div class="row">
                               <div class="col-6">
@@ -42,8 +36,8 @@
                                 {{ form.location|as_crispy_field }}
                               </div>
                             </div>
-                            {{ form.description|as_crispy_field }}
-                            <button type="submit" class="btn btn-success">Save person</button>
+                                {{ form.description|as_crispy_field }}
+                            <button type="submit" class="btn btn-success">Save route</button>
                           </form>
 
                     </div>
