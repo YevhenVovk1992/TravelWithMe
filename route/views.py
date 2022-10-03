@@ -14,8 +14,14 @@ def index(request):
     return render(request, 'route/index.html', data)
 
 
-def route_filter(request, route_type=None, country=None, location=None):
-    return HttpResponse(f'<h3>{route_type}-{country}-{location}</h3>')
+def route_filter(request, **kwargs):
+    route_list = models.Route.objects.all().filter(**kwargs)
+    data = {
+        'title': 'Routes',
+        'route_list': [itm.to_dict() for itm in route_list]
+    }
+    return render(request, 'route/route_filter.html', data)
+
 
 
 def add_route(request):

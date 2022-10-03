@@ -27,8 +27,19 @@ class Route(models.Model):
     duration = models.IntegerField(null=False, default=7)
 
     def __str__(self):
-        return f'{self.route_type}-{self.country}-{self.location}-{self.start_point}-{self.destination}'
+        return f'Route №{self.pk} {self.route_type}-{self.country}-{self.location}-{self.start_point}-{self.destination}'
 
+    def to_dict(self):
+        return {self.pk: {
+            'start_point': str(self.start_point),
+            'stop_point': self.stop_point,
+            'destination': str(self.destination),
+            'route_type': self.route_type,
+            'country': self.country,
+            'location': self.location,
+            'description': self.description,
+            'duration': self.duration
+        }}
 
 class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)

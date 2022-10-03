@@ -1,0 +1,11 @@
+{% extends 'route/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+        {% for el in route_list %}
+            <p>{{ el }}</p>
+        {% endfor %}
+{% endblock %}
