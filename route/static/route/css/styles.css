@@ -11619,6 +11619,7 @@ body {
 .projects-section .featured-text {
   padding: 2rem;
 }
+
 @media (min-width: 992px) {
   .projects-section .featured-text {
     padding: 0 0 0 2rem;
@@ -11699,4 +11700,8 @@ body {
 .footer {
   padding: 5rem 0;
 }
-
+/* table_routes */
+.route_detail{
+  text-align: center;
+  padding: 2%;
+}

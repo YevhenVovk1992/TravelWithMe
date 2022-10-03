@@ -5,7 +5,30 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-        {% for el in route_list %}
-            <p>{{ el }}</p>
-        {% endfor %}
+    <!-- Projects-->
+        <section class="projects-section bg-light" id="projects">
+             <div class="container px-4 px-lg-5">
+                <div class="route_detail">
+                <h2>Available Routes</h2>
+                <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        {% for k in route_list|first %}
+                        <th scope="col">{{k|upper}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for el in route_list %}
+                    <tr>
+                    {% for e in el.values %}
+                            <td>{{e}}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+                </div>
+            </div>
+        </section>
 {% endblock %}
