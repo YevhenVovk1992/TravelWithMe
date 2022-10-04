@@ -1,0 +1,38 @@
+{% extends 'route/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="projects-section bg-light" id="projects">
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+        <div class="col-lg-6 order-lg-first" style="width: 100%;">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-right">
+
+                            <div class="route_reviews">
+                                <h4 class="text-white">Route reviews</h4>
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                                {% for review in reviews %}
+                                    <p class="mb-0 text-white-50">{{ forloop.counter }}</p>
+                                    <p class="mb-0 text-white-50">Route: {{ review.id_route }}</p>
+                                    <p class="mb-0 text-white-50">Rating: {{ review.rating }}</p>
+                                    <p class="mb-0 text-white-50">Comment: {{ review.comment }}</p>
+                                    <br>
+                                {% endfor %}
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

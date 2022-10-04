@@ -64,6 +64,6 @@ class Event(models.Model):
 
 
 class RouteReview(models.Model):
-    id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
+    id_route = models.ForeignKey(Route, null=False, related_name='route_review', on_delete=models.RESTRICT)
     rating = models.IntegerField(null=False)
-    comment = pending_users = models.TextField(null=True)
+    comment = models.TextField(null=True)

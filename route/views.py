@@ -68,8 +68,13 @@ def route_detail(request, id_route):
 
 
 def route_review(request, id_route):
-    get_reviews = models.RouteReview.objects.filter(id_route=id_route).all()
-    return HttpResponse(f'<h3>{id_route}</h3>')
+    if request.method == 'GET':
+        get_reviews = models.RouteReview.objects.filter(id_route=id_route).all()
+        data = {
+            'title': 'Reviews',
+            'reviews': get_reviews
+        }
+        return render(request, 'route/route_review.html', data)
 
 
 def route_add_event(request, id_route):
@@ -102,4 +107,10 @@ def route_add_event(request, id_route):
 
 
 def event_handler(request, event_id):
-    return HttpResponse(f'<h3>{event_id}</h3>')
+    get_event = models.Event.objects.filter(pk=event_id).first()
+    print(get_event)
+    data = {
+        'title': 'Event Info',
+        'event': get_event
+    }
+    return render(request, 'route/event_detail.html', data)

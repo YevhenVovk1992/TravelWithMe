@@ -1,0 +1,41 @@
+{% extends 'route/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="projects-section bg-light" id="projects">
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+        <div class="col-lg-6 order-lg-first" style="width: 100%;">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-right">
+
+                            <div class="route_reviews">
+                                <h4 class="text-white">Event details</h4>
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                                <p class="mb-0 text-white-50">Start: {{ event.id_route.start_point }}</p>
+                                <p class="mb-0 text-white-50">Type of hike: {{ event.id_route.route_type }}</p>
+                                <p class="mb-0 text-white-50">Country: {{ event.id_route.country }}</p>
+                                <p class="mb-0 text-white-50">Location: {{ event.id_route.location }}</p>
+                                <p class="mb-0 text-white-50">Duration: {{ event.id_route.duration }}</p>
+                                <p class="mb-0 text-white-50">Guide: {{ event.event_admin }}</p>
+                                <p class="mb-0 text-white-50">Approved users: {{ event.approved_users }}</p>
+                                <p class="mb-0 text-white-50">Pending users: {{ event.pending_users }}</p>
+                                <p class="mb-0 text-white-50">Start date: {{ event.start_date }}</p>
+                                <p class="mb-0 text-white-50">Price: {{ event.price }}</p>
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
