@@ -61,3 +61,9 @@ class Event(models.Model):
             'start_date': self.start_date,
             'price': self.price
         }
+
+
+class RouteReview(models.Model):
+    id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
+    rating = models.IntegerField(null=False)
+    comment = pending_users = models.TextField(null=True)

@@ -23,7 +23,6 @@ def route_filter(request, **kwargs):
     return render(request, 'route/route_filter.html', data)
 
 
-
 def add_route(request):
     form = forms.RouteForm()
     if request.method == 'GET':
@@ -65,11 +64,11 @@ def route_detail(request, id_route):
         'route': get_route,
         'events': get_events
     }
-    print(get_events.values())
     return render(request, 'route/route_detail.html', data)
 
 
 def route_review(request, id_route):
+    get_reviews = models.RouteReview.objects.filter(id_route=id_route).all()
     return HttpResponse(f'<h3>{id_route}</h3>')
 
 
