@@ -1,0 +1,68 @@
+{% extends 'route/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="projects-section bg-light" id="projects">
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+        <div class="col-lg-6 order-lg-first">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-right">
+
+                            <div class="route_events">
+                                <h4 class="text-white">All trips along route</h4>
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                                {% for event in events %}
+                                    <p class="mb-0 text-white-50">Route: {{ event.id_route }}</p>
+                                    <p class="mb-0 text-white-50">Route guide: {{ event.event_admin }}</p>
+                                    {% if event.approved_users %}
+                                        <p class="mb-0 text-white-50">Approved users: {{ event.approved_users }}</p>
+                                    {% endif %}
+                                    {% if event.event.pending_users %}
+                                        <p class="mb-0 text-white-50">Pending users: {{ event.pending_users }}</p>
+                                    {% endif %}
+                                    <p class="mb-0 text-white-50">Start date: {{ event.start_date }}</p>
+                                    <p class="mb-0 text-white-50">Price: {{ event.price }}</p>
+                                    <br>
+                                {% endfor %}
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-left">
+                            <div class="route_detail">
+                                <h4 class="text-white" >Route information</h4>
+                                <hr class="d-none d-lg-block mb-0 ms-0" />
+                                <p class="mb-0 text-white-50">The beginning of the route: {{ route.start_point }}</p>
+                                <p class="mb-0 text-white-50">Description of the starting point: {{ route.start_point.info }}</p>
+                                {% if route.stop_point %}
+                                    <p class="mb-0 text-white-50">Points of interest: {{ route.stop_point }}</p>
+                                {% endif %}
+                                <p class="mb-0 text-white-50">Destination: {{ route.destination }}</p>
+                                <p class="mb-0 text-white-50">Destination information:{{ route.destination.info }}</p>
+                                <p class="mb-0 text-white-50">Route type: {{ route.route_type }}</p>
+                                <p class="mb-0 text-white-50">Country: {{ route.country }}</p>
+                                <p class="mb-0 text-white-50">Location: {{ route.location }}</p>
+                                <p class="mb-0 text-white-50">Description: {{ route.description }}</p>
+                                <p class="mb-0 text-white-50">Route duration: {{ route.duration }}</p>
+                                <hr class="d-none d-lg-block mb-0 ms-0" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

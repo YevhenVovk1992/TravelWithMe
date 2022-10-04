@@ -42,6 +42,7 @@ class Route(models.Model):
             'duration': self.duration
         }
 
+
 class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
     event_admin = models.IntegerField()
@@ -49,3 +50,14 @@ class Event(models.Model):
     pending_users = models.TextField(null=True)
     start_date = models.DateField(null=False)
     price = models.IntegerField(null=True)
+
+    def to_dict(self):
+        return {
+            'id': self.pk,
+            'id route': str(self.id_route),
+            'event_admin': self.event_admin,
+            'approved_users': self.approved_users,
+            'pending_users': self.pending_users,
+            'start_date': self.start_date,
+            'price': self.price
+        }

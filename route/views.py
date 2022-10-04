@@ -58,7 +58,15 @@ def add_route(request):
 
 
 def route_detail(request, id_route):
-    return HttpResponse(f'<h3>{id_route}</h3>')
+    get_route = models.Route.objects.filter(pk=id_route).first()
+    get_events = models.Event.objects.filter(id_route=id_route).all()
+    data = {
+        'title': 'Info',
+        'route': get_route,
+        'events': get_events
+    }
+    print(get_events.values())
+    return render(request, 'route/route_detail.html', data)
 
 
 def route_review(request, id_route):
