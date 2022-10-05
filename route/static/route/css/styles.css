@@ -494,6 +494,9 @@ progress {
 .route_reviews p{
   font-size: 20px;
 }
+.route_events p{
+  font-size: 20px;
+}
 
 .lead {
   font-size: 1.25rem;

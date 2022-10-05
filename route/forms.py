@@ -16,11 +16,11 @@ class EventForm(forms.ModelForm):
 
 class RouteForm(forms.ModelForm):
 
-    start_point = forms.ModelChoiceField(queryset=models.Place.objects.all(), label='start place')
-    destination = forms.ModelChoiceField(queryset=models.Place.objects.all(), label='finish place')
+    start_point = forms.ModelChoiceField(queryset=models.Place.objects.all(), label='Start place')
+    destination = forms.ModelChoiceField(queryset=models.Place.objects.all(), label='Finish place')
     route_type = forms.ChoiceField(choices=models.Route.RouteType.choices)
-    country = forms.CharField(max_length=50, label='country')
-    location = forms.CharField(max_length=50, label='location')
+    country = forms.CharField(max_length=50, label='Country')
+    location = forms.CharField(max_length=50, label='Location')
     description = forms.CharField(widget=forms.Textarea)
     duration = forms.IntegerField()
 
