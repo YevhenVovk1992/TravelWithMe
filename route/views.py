@@ -8,8 +8,12 @@ from route import models
 # Create your views here.
 
 def index(request):
+    top_routes = models.RouteReview.objects.order_by('rating')[:3]
+    countries = models.Route.objects.raw('SELECT id, country FROM route_route GROUP BY country')
     data = {
         'title': 'TravelWithMe',
+        'top_routes': top_routes,
+        'countries': countries
     }
     return render(request, 'route/index.html', data)
 

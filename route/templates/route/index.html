@@ -4,33 +4,62 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block start_button %}
+<a class="btn btn-primary" href="#about">Get Started</a>
+{% endblock %}
+
+{% block navigator %}
+     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">Top</a>
+                <a class="navbar-brand" href={% url 'index' %}>Home</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                         <li class="nav-item"><a class="nav-link" href='#'>Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href={% url 'route:route_all' %}>Routes</a></li>
+                        <li class="nav-item"><a class="nav-link" href='#'>Coming Hikes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#signup">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+{% endblock %}
+
 {% block content %}
         <!-- About-->
         <section class="about-section text-center" id="about">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8">
-                        <h2 class="text-white mb-4">Built with Bootstrap 5</h2>
+                        <h2 class="text-white mb-4">Who we are </h2>
                         <p class="text-white-50">
-                            Grayscale is a free Bootstrap theme created by Start Bootstrap. It can be yours right now, simply download the template on
-                            <a href="https://startbootstrap.com/theme/grayscale/">the preview page.</a>
-                            The theme is open source, and you can use it for any purpose, personal or commercial.
+                            Our team consists of qualified tour operators who attend many conferences and gatherings before recommending a destination for you.
+                            We provide the best and most exclusive options for our clients to make the vacation unforgettable, amazing and memorable experience for a long time.
+                            First of all, this is the saving of personal time. To arrange any information to another country, view detailed information, find a hotel, check the location. Technologies and services provided detailed data for each resort with comments and reviews, it remains only to choose the final version.
                         </p>
                     </div>
                 </div>
-                <img class="img-fluid" src={% static 'route/img/ipad.png' %} alt="..." />
+                <img class="img-fluid" src={% static 'route/img/vecteezy_denver-mountain_1206201.png' %} alt="..." />
             </div>
         </section>
-        <!-- Projects-->
-        <section class="projects-section bg-light" id="projects">
+        <!-- Routes-->
+        <section class="projects-section bg-light" id="routes">
             <div class="container px-4 px-lg-5">
                 <!-- Featured Project Row-->
                 <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
                     <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src={% static 'route/img/bg-masthead.jpg' %} alt="..." /></div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-                            <h4>Shoreline</h4>
-                            <p class="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it for any project - even commercial projects! Download it, customize it, and publish your website!</p>
+                            <h4>The Best our routes</h4>
+                            {% for route in top_routes %}
+                                <p class="text-black-50 mb-0">{{ route.id_route }}</p>
+                                <br>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -41,9 +70,11 @@
                         <div class="bg-black text-center h-100 project">
                             <div class="d-flex h-100">
                                 <div class="project-text w-100 my-auto text-center text-lg-left">
-                                    <h4 class="text-white">Misty</h4>
-                                    <p class="mb-0 text-white-50">An example of where you can put an image of a project, or anything else, along with a description.</p>
-                                    <hr class="d-none d-lg-block mb-0 ms-0" />
+                                    <h4 class="text-white">Country</h4>
+                                    {% for country in countries %}
+                                        <p class="mb-0 text-white-50">{{ country.country }}</p>
+                                        <hr class="d-none d-lg-block mb-0 ms-0" />
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
