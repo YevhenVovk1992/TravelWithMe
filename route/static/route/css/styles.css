@@ -497,6 +497,10 @@ progress {
 .route_events p{
   font-size: 20px;
 }
+.route_detail a{
+  margin-top: 7%;
+  float: right;
+}
 
 .lead {
   font-size: 1.25rem;
