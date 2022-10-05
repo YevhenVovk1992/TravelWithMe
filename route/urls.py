@@ -11,8 +11,9 @@ urlpatterns = [
     path('<int:id_route>/review', views.route_review, name='route_review'),
     path('<int:id_route>/add_event', views.route_add_event, name='add_event'),
 
-    path('<str:route_type>', views.route_filter, name='route_type'),
-    path('<str:route_type>/<str:country>', views.route_filter, name='route_country'),
-    path('<str:route_type>/<str:country>/<str:location>', views.route_filter, name='route_location'),
-
+    path('type-<str:route_type>', views.route_filter, name='route_type'),
+    path('type-<str:route_type>/country-<str:country>', views.route_filter, name='route_country'),
+    path(
+        'type-<str:route_type>/country-<str:country>/location-<str:location>',
+        views.route_filter, name='route_location')
 ]
