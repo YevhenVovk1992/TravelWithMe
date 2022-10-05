@@ -117,7 +117,7 @@ def event_handler(request, event_id):
         'title': 'Event Info',
         'event': get_event
     }
-    return render(request, 'route/event_detail.html', data)
+    return render(request, 'route/event_handler.html', data)
 
 
 def event_all(request):
