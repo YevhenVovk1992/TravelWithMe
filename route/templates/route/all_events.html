@@ -36,17 +36,17 @@
         <section class="projects-section bg-light" id="Routes">
              <div class="container px-4 px-lg-5">
                 <div class="route_detail">
-                <h2>Available Routes</h2>
+                <h2>Coming events</h2>
                 <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        {% for k in route_list|first %}
+                        {% for k in all_event|first %}
                         <th scope="col">{{k|upper}}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
-                {% for el in route_list %}
+                {% for el in all_event %}
                     <tr>
                     {% for e in el.values %}
                             <td>{{e}}</td>

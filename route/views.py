@@ -118,3 +118,12 @@ def event_handler(request, event_id):
         'event': get_event
     }
     return render(request, 'route/event_detail.html', data)
+
+
+def event_all(request):
+    all_event = models.Event.objects.all()
+    data = {
+        'title': 'All Events',
+        'all_event': [itm.to_dict() for itm in all_event]
+    }
+    return render(request, 'route/all_events.html', data)
