@@ -5,6 +5,10 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block start_button %}
+<a class="btn btn-primary" href="#add">Get Started</a>
+{% endblock %}
+
 
 {% block navigator %}
      <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
@@ -29,14 +33,40 @@
 {% endblock %}
 
 {% block content %}
-
-        <section class="signup-section" id="success">
+        <!-- Add-->
+        <section class="signup-section" id="add">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-md-10 col-lg-8 mx-auto text-center">
-                        <i class="fa fa-check fa-2x mb-2 text-white"></i>
-                        <h2 class="text-white mb-5">Operation status</h2>
-                        <h3>{{ operation_status }}</h3>
+                        <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
+                        <h2 class="text-white mb-5">Create a new route</h2>
+
+                        <form method="post" >
+                            {% csrf_token %}
+                            <div class="row">
+                              <div class="col-6">
+                                {{ form.username|as_crispy_field }}
+                              </div>
+                              <div class="col-6">
+                                {{ form.email|as_crispy_field }}
+                              </div>
+                              <div class="col-6">
+                                {{ form.password1|as_crispy_field }}
+                              </div>
+                              <div class="col-6">
+                                {{ form.password2|as_crispy_field }}
+                              </div>
+                              <div class="col-6">
+                                {{ form.first_name|as_crispy_field }}
+                              </div>
+                              <div class="col-6">
+                                {{ form.last_name|as_crispy_field }}
+                              </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Save route</button>
+                          </form>
+
                     </div>
                 </div>
             </div>

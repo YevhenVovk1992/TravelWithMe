@@ -19,6 +19,9 @@ from route import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('registration/', views.registration, name='registration'),
     path('', views.index, name='index'),
     path('route/', include("route.urls")),
     path('event', views.event_all, name='event_all'),

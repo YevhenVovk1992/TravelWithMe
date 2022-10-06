@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 from route import forms
 from route import models
@@ -127,3 +127,33 @@ def event_all(request):
         'all_event': [itm.to_dict() for itm in all_event]
     }
     return render(request, 'route/all_events.html', data)
+
+def login(request):
+    return redirect('registration')
+
+def logout(request):
+    pass
+
+
+def registration(request):
+    if request.method == 'GET':
+        form = forms.RegisterForm()
+        data = {
+            'title': 'Registration',
+            'form': form
+        }
+        return render(request, 'route/registration.html', data)
+    if request.method == 'POST':
+        form = forms.RegisterForm(request.POST)
+        data = {
+            'title': 'Registration',
+            'operation_status': 'User registered successfully.'
+
+        }
+        if form.is_valid():
+            form.save()
+            return render(request, 'route/successful.html', data)
+        else:
+            data['operation_status'] = 'error'
+            return render(request, 'route/error.html', data)
+
