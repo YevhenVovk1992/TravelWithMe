@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
@@ -28,6 +29,7 @@ def route_filter(request, **kwargs):
     return render(request, 'route/route_filter.html', data)
 
 
+@login_required(login_url='login')
 def add_route(request):
     form = forms.RouteForm()
     if request.method == 'GET':
@@ -82,6 +84,7 @@ def route_review(request, id_route):
         return render(request, 'route/route_review.html', data)
 
 
+@login_required(login_url='login')
 def route_add_event(request, id_route):
     if request.method == 'GET':
         form = forms.EventForm(initial={'id_route': id_route})
@@ -111,6 +114,7 @@ def route_add_event(request, id_route):
             return render(request, 'route/successful.html', data)
 
 
+@login_required(login_url='login')
 def event_handler(request, event_id):
     get_event = models.Event.objects.filter(pk=event_id).first()
     data = {
@@ -120,6 +124,7 @@ def event_handler(request, event_id):
     return render(request, 'route/event_handler.html', data)
 
 
+@login_required(login_url='login')
 def event_all(request):
     all_event = models.Event.objects.all()
     data = {

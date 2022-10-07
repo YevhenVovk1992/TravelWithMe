@@ -9,27 +9,6 @@
 <a class="btn btn-primary" href="#Routes">Get Started</a>
 {% endblock %}
 
-{% block navigator %}
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#page-top">Top</a>
-                <a class="navbar-brand" href={% url 'index' %}>Home</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                         <li class="nav-item"><a class="nav-link" href='#'>Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href={% url 'index' %}>About</a></li>
-                        <li class="nav-item"><a class="nav-link" href={% url 'route:route_all' %}>Routes</a></li>
-                        <li class="nav-item"><a class="nav-link" href={% url 'event_all' %}>Coming Hikes</a></li>
-                        <li class="nav-item"><a class="nav-link" href={% url 'index' %}>Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-{% endblock %}
 
 {% block content %}
     <!-- Routes-->
@@ -55,7 +34,9 @@
                 {% endfor %}
                 </tbody>
                 </table>
-                <a class="btn btn-primary" href={% url 'route:add_route' %}>Add route</a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-primary" href={% url 'route:add_route' %}>Add route</a>
+                {% endif %}
                 </div>
             </div>
         </section>
