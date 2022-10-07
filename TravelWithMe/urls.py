@@ -19,7 +19,7 @@ from route import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.login, name='login'),
+    path('login/', views.user_login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('registration/', views.registration, name='registration'),
     path('', views.index, name='index'),

@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
@@ -83,7 +84,7 @@ def route_review(request, id_route):
 
 def route_add_event(request, id_route):
     if request.method == 'GET':
-        form = forms.EventForm()
+        form = forms.EventForm(initial={'id_route': id_route})
         data = {
             'title': 'Add New Event',
             'form': form
@@ -112,7 +113,6 @@ def route_add_event(request, id_route):
 
 def event_handler(request, event_id):
     get_event = models.Event.objects.filter(pk=event_id).first()
-    print(get_event)
     data = {
         'title': 'Event Info',
         'event': get_event
@@ -128,11 +128,39 @@ def event_all(request):
     }
     return render(request, 'route/all_events.html', data)
 
-def login(request):
-    return redirect('registration')
 
-def logout(request):
-    pass
+def user_login(request):
+    if request.method == 'GET':
+        form = forms.UserLogin()
+        data = {
+            'title': 'User Login',
+            'form': form
+        }
+        return render(request, 'route/login.html', data)
+    if request.method == 'POST':
+        form = forms.UserLogin(request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password']
+            )
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('index')
+                else:
+                    data = {
+                        'title': 'User Error',
+                        'operation_status': 'Disable account'
+                    }
+                    render(request, 'route/error.html', data)
+            else:
+                return redirect('registration')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')
 
 
 def registration(request):
@@ -154,6 +182,5 @@ def registration(request):
             form.save()
             return render(request, 'route/successful.html', data)
         else:
-            data['operation_status'] = 'error'
+            data['operation_status'] = 'Incorrectly completed form'
             return render(request, 'route/error.html', data)
-
