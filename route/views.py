@@ -2,6 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseNotFound
+from django.contrib.auth.models import User
+
+
 
 from route import forms
 from route import models
@@ -124,7 +128,6 @@ def event_handler(request, event_id):
     return render(request, 'route/event_handler.html', data)
 
 
-@login_required(login_url='login')
 def event_all(request):
     all_event = models.Event.objects.all()
     data = {
@@ -189,3 +192,19 @@ def registration(request):
         else:
             data['operation_status'] = 'Incorrectly completed form'
             return render(request, 'route/error.html', data)
+
+
+def user_info(request, username):
+    try:
+        active_user = request.session['_auth_user_id']
+    except KeyError:
+        return redirect('login')
+    get_user_info = User.objects.get(username=username)
+    if get_user_info.pk == int(active_user):
+        data = {
+            'title': 'User info',
+            'user_info': get_user_info
+        }
+        return render(request, 'route/user_info.html', data)
+    else:
+        return HttpResponseNotFound('<h1>No user info</h1>')

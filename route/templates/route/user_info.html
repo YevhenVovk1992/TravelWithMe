@@ -1,0 +1,53 @@
+{% extends 'route/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block start_button %}
+<a class="btn btn-primary" href="#details">Get Started</a>
+{% endblock %}
+
+{% block content %}
+<section class="projects-section bg-light" id="details">
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+        <div class="col-lg-6 order-lg-first">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-right">
+
+                            <div class="route_events">
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                                <img class="user_photo_default" alt="my_photo" src={% static 'route/img/user_photo_default.jpg' %}>
+                                <hr class="d-none d-lg-block mb-0 me-0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-left">
+                            <div class="route_detail">
+                                <h4 class="text-white" >User information</h4>
+                                <hr class="d-none d-lg-block mb-0 ms-0" />
+                                <p class="mb-0 text-white-50">User name: {{ user_info.username }}</p>
+                                <p class="mb-0 text-white-50">Email: {{ user_info.email }}</p>
+                                <p class="mb-0 text-white-50">Registration date: {{ user_info.date_joined }}</p>
+                                <p class="mb-0 text-white-50">First name:{{ user_info.first_name }}</p>
+                                <p class="mb-0 text-white-50">Last name: {{ user_info.last_name }}</p>
+
+                                <hr class="d-none d-lg-block mb-0 ms-0" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

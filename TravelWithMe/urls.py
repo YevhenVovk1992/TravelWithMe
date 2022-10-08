@@ -18,12 +18,13 @@ from django.urls import path, include
 from route import views
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('registration/', views.registration, name='registration'),
-    path('', views.index, name='index'),
     path('route/', include("route.urls")),
     path('event', views.event_all, name='event_all'),
-    path('event/<int:event_id>', views.event_handler, name='event_handler')
+    path('event/<int:event_id>', views.event_handler, name='event_handler'),
+    path('user/<str:username>', views.user_info, name='user_info')
 ]

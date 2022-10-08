@@ -491,6 +491,10 @@ progress {
 [hidden] {
   display: none !important;
 }
+.user_photo_default{
+  max-width: 75%;
+  width: 200px;
+}
 .route_reviews p{
   font-size: 20px;
 }
