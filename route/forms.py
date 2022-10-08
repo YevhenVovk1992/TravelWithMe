@@ -2,7 +2,7 @@ from django import forms
 from route import models
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class EventForm(forms.ModelForm):
@@ -32,6 +32,7 @@ class RouteForm(forms.ModelForm):
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(label='Email')
+    account_type = forms.ChoiceField(widget=forms.Select(), choices=models.ChoiceTypeAccount.choices_type())
 
     class Meta:
         model = User

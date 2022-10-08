@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy
+from django.contrib.auth.models import User, Group
 
 
 # Create your models here.
@@ -67,3 +68,11 @@ class RouteReview(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route_review', on_delete=models.RESTRICT)
     rating = models.IntegerField(null=False)
     comment = models.TextField(null=True)
+
+
+class ChoiceTypeAccount:
+    _CHOICES_LIST = [(itm.pk, itm.name) for itm in Group.objects.all()]
+
+    @classmethod
+    def choices_type(cls):
+        return cls._CHOICES_LIST
