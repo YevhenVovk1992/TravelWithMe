@@ -63,6 +63,11 @@ class Event(models.Model):
             'price': self.price
         }
 
+    class Meta:
+        ordering = ['start_date']
+        verbose_name = 'Event'
+        verbose_name_plural = 'Travel event'
+
 
 class RouteReview(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route_review', on_delete=models.RESTRICT)
