@@ -14,7 +14,12 @@ from route import models
 
 def index(request):
     top_routes = models.RouteReview.objects.order_by('rating')[:3]
-    countries = models.Route.objects.raw('SELECT id, country FROM route_route GROUP BY country')
+    countries = models.Route.objects.raw(
+        """SELECT route_route.id, route_route.country as country, route_place.name as place
+        FROM route_route join route_place
+        ON route_route.start_point_id = route_place.id
+        GROUP BY route_route.country"""
+    )
     data = {
         'title': 'TravelWithMe',
         'top_routes': top_routes,

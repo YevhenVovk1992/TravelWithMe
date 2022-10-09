@@ -14,7 +14,7 @@
     <!-- Routes-->
         <section class="projects-section bg-light" id="Routes">
              <div class="container px-4 px-lg-5">
-                <div class="route_detail">
+                <div class="route_table">
                 <h2>Available Routes</h2>
                 <table class="table table-striped">
                 <thead class="thead-dark">
@@ -30,6 +30,9 @@
                     {% for e in el.values %}
                             <td>{{e}}</td>
                     {% endfor %}
+                    </tr>
+                    <tr>
+                        <td colspan="7"><p><a href={% url 'route:route_detail' id_route=el.id %}>Route №{{ el.id }}</a></p></td>
                     </tr>
                 {% endfor %}
                 </tbody>

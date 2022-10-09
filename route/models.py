@@ -34,12 +34,10 @@ class Route(models.Model):
         return {
             'id': self.pk,
             'start point': str(self.start_point),
-            'stop point': self.stop_point,
             'destination': str(self.destination),
             'route type': self.route_type,
             'country': self.country,
             'location': self.location,
-            'description': self.description,
             'duration': self.duration
         }
 

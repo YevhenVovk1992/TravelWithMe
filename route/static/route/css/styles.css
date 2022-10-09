@@ -505,7 +505,6 @@ progress {
   margin-top: 7%;
   float: right;
 }
-
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
@@ -1984,6 +1983,7 @@ progress {
   --bs-table-active-bg: rgba(0, 0, 0, 0.1);
   --bs-table-hover-color: #212529;
   --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+  table-layout: fixed;
   width: 100%;
   margin-bottom: 1rem;
   color: #212529;
@@ -11716,6 +11716,10 @@ body {
 }
 /* table_routes */
 .route_detail{
+  text-align: center;
+  padding: 2%;
+}
+.route_table{
   text-align: center;
   padding: 2%;
 }
