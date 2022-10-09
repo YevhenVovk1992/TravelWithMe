@@ -499,7 +499,10 @@ progress {
   font-size: 20px;
 }
 .route_events p{
-  font-size: 20px;
+  font-size: 16px;
+}
+.route_detail p{
+  font-size: 17px;
 }
 .route_detail a{
   margin-top: 7%;
@@ -11715,10 +11718,6 @@ body {
   padding: 5rem 0;
 }
 /* table_routes */
-.route_detail{
-  text-align: center;
-  padding: 2%;
-}
 .route_table{
   text-align: center;
   padding: 2%;

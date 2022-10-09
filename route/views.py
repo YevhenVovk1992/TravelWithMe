@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Subquery, OuterRef
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound
@@ -81,10 +82,13 @@ def add_route(request):
 def route_detail(request, id_route):
     get_route = models.Route.objects.filter(pk=id_route).first()
     get_events = models.Event.objects.filter(id_route=id_route).all()
+    get_review = models.RouteReview.objects.filter(id_route=id_route).all()
+
     data = {
         'title': 'Info',
         'route': get_route,
-        'events': get_events
+        'events': get_events,
+        'get_review': get_review
     }
     return render(request, 'route/route_detail.html', data)
 

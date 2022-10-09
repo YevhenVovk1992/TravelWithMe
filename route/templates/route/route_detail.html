@@ -67,6 +67,29 @@
             </div>
         </div>
     </div>
-
 </section>
+<section class="projects-section bg-light" id="Routes">
+             <div class="container px-4 px-lg-5">
+                <div class="route_table">
+                <h2>Route Reviews</h2>
+                <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Comment</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for el in get_review %}
+                        <tr>
+                            <td>{{el.rating}}</td>
+                            <td>{{el.comment}}</td>
+                        </tr>
+                 {% endfor %}
+                </tbody>
+                </table>
+                </div>
+            </div>
+        </section>
 {% endblock %}
