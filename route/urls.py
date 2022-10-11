@@ -15,5 +15,5 @@ urlpatterns = [
     path('type-<str:route_type>/country-<str:country>', views.route_filter, name='route_country'),
     path(
         'type-<str:route_type>/country-<str:country>/location-<str:location>',
-        views.route_filter, name='route_location')
+        views.route_filter, name='route_filter')
 ]

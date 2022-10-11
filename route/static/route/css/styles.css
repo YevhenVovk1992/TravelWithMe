@@ -11726,3 +11726,15 @@ body {
   text-align: center;
   padding: 2%;
 }
+.route_filter_sec {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  background: linear-gradient(to bottom, #060606 0%, rgba(219, 219, 219, 0.9) 75%, rgb(255, 255, 255) 100%);
+}
+.route_filter_sec select{
+  text-align: center;
+}
+.route_filter_sec .col-lg-8{
+  width: 48%;
+}
+

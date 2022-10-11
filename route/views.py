@@ -13,23 +13,33 @@ from route import models
 # Create your views here.
 
 def index(request):
-    top_routes = models.RouteReview.objects.order_by('rating')[:3]
-    countries = models.Route.objects.raw(
-        """SELECT route_route.id, route_route.country as country, route_place.name as place
-        FROM route_route join route_place
-        ON route_route.start_point_id = route_place.id
-        GROUP BY route_route.country"""
-    )
-    data = {
-        'title': 'TravelWithMe',
-        'top_routes': top_routes,
-        'countries': countries
-    }
-    return render(request, 'route/index.html', data)
+    if request.method == 'GET':
+        form = forms.RouteFilter()
+        top_routes = models.RouteReview.objects.order_by('rating')[:3]
+        countries = models.Route.objects.raw(
+            """SELECT route_route.id, route_route.country as country, route_place.name as place
+            FROM route_route join route_place
+            ON route_route.start_point_id = route_place.id
+            GROUP BY route_route.country"""
+        )
+        data = {
+            'title': 'TravelWithMe',
+            'top_routes': top_routes,
+            'countries': countries,
+            'form': form
+        }
+        return render(request, 'route/index.html', data)
+    else:
+        form = forms.RouteFilter(request.POST)
+        if form.is_valid():
+            route_type = form.cleaned_data['route_type']
+            country = form.cleaned_data['country']
+            location = form.cleaned_data['location']
+            return redirect('route:route_filter', route_type=route_type, country=country, location=location)
 
 
 def route_filter(request, **kwargs):
-    route_list = models.Route.objects.all().filter(**kwargs)
+    route_list = models.Route.objects.filter(**kwargs).all()
     data = {
         'title': 'Routes',
         'route_list': [itm.to_dict() for itm in route_list]

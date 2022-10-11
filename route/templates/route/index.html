@@ -1,4 +1,5 @@
 {% extends 'route/base.html' %}
+{% load crispy_forms_filters %}
 {% load static %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -7,6 +8,28 @@
 <a class="btn btn-primary" href="#about">Get Started</a>
 {% endblock %}
 
+{% block route_filter %}
+ <section class="route_filter_sec text-center" id="route_filter">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="route_filter">
+                             <form method="post" >
+                                {% csrf_token %}
+
+
+                                    {{ form.location|as_crispy_field }}
+                                    {{ form.route_type|as_crispy_field }}
+                                    {{ form.country|as_crispy_field }}
+
+                                <button type="submit" class="btn btn-success">Find Routes</button>
+                              </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ </section>
+{% endblock %}
 
 {% block content %}
         <!-- About-->
@@ -68,6 +91,7 @@
                                     <h4 class="text-white">Mountains</h4>
                                     <p class="mb-0 text-white-50">Another example of a project with its respective description. These sections work well responsively as well, try this theme on a small screen!</p>
                                     <hr class="d-none d-lg-block mb-0 me-0" />
+
                                 </div>
                             </div>
                         </div>

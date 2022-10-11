@@ -1,4 +1,6 @@
+{% load crispy_forms_filters %}
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -60,6 +62,8 @@
             </div>
         </header>
 
+{% block route_filter %}
+{% endblock %}
 
 {% block content %}
 {% endblock %}

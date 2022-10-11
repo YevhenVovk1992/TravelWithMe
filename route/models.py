@@ -68,9 +68,4 @@ class RouteReview(models.Model):
     comment = models.TextField(null=True)
 
 
-class ChoiceTypeAccount:
-    _CHOICES_LIST = [(itm.pk, itm.name) for itm in Group.objects.all()]
 
-    @classmethod
-    def choices_type(cls):
-        return cls._CHOICES_LIST
