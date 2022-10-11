@@ -54,9 +54,9 @@ class Event(models.Model):
         return {
             'id': self.pk,
             'id route': str(self.id_route),
-            'event_admin': self.event_admin,
-            'approved_users': self.approved_users,
-            'pending_users': self.pending_users,
+            'event_admin': User.objects.get(pk=self.event_admin).username,
+            'approved_users': self.approved_users if self.approved_users is not None else '',
+            'pending_users': self.pending_users if self.pending_users is not None else '',
             'start_date': self.start_date,
             'price': self.price
         }

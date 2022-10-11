@@ -501,6 +501,10 @@ progress {
 .route_events p{
   font-size: 16px;
 }
+.events_table {
+  text-align: center;
+  padding: 2%;
+}
 .route_detail p{
   font-size: 17px;
 }

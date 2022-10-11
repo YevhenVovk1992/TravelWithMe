@@ -1,8 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Subquery, OuterRef, Sum, Count, Avg
+from django.db.models import Subquery, OuterRef, Avg
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib.auth.models import User, Group
 
@@ -144,7 +143,9 @@ def route_add_event(request, id_route):
 @login_required(login_url='login')
 def event_handler(request, event_id):
     if request.user.has_perm('route.view_event'):
-        get_event = models.Event.objects.filter(pk=event_id).first()
+        get_event = models.Event.objects.filter(pk=event_id).annotate(
+            guide=Subquery(User.objects.filter(pk=OuterRef('event_admin')).values('username'))
+        ).first()
         data = {
             'title': 'Event Info',
             'event': get_event
@@ -191,7 +192,6 @@ def user_login(request):
                     return render(request, 'route/error.html', data)
                 if user.is_active:
                     login(request, user)
-
                     return redirect('index')
                 else:
                     data = {
