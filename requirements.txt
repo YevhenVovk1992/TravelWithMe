@@ -4,3 +4,5 @@ Django==4.1.1
 django-crispy-forms==1.14.0
 django-environ==0.9.0
 sqlparse==0.4.3
+
+pymongo~=4.2.0
