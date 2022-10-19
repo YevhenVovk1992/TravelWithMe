@@ -60,8 +60,8 @@ def add_route(request):
     :return: HTML with Django form
     """
     if request.user.has_perm('route.add_route'):
-        form = forms.RouteForm()
         if request.method == 'GET':
+            form = forms.RouteForm()
             data = {
                 'title': 'Add New Route',
                 'form': form,
@@ -74,14 +74,14 @@ def add_route(request):
                 'anchor': '#signup',
                 'operation_status': 'Operation successful'
             }
-            print(request.POST.get('stop_points'))
-            stop_points = json.loads(request.POST.get('stop_points'))
-            print(stop_points)
-
+            stop_point_data = json.loads(request.POST.get('stop_points'))
             try:
+                with MongoConnect(CONNECTION_STRING, 'test') as db:
+                    id_stop_points = db['stop_points'].insert_one({'points': stop_point_data}).inserted_id
                 new_route = models.Route(
                     start_point=models.Place.objects.filter(id=request.POST.get('start_point'))[0],
                     destination=models.Place.objects.filter(id=request.POST.get('destination'))[0],
+                    stop_point=id_stop_points,
                     route_type=request.POST.get('route_type'),
                     country=request.POST.get('country'),
                     location=request.POST.get('location'),
@@ -114,7 +114,9 @@ def route_detail(request, id_route):
     get_review = models.RouteReview.objects.filter(id_route=id_route).all()
 
     # Get an average rating
-    avg_rating = int(models.RouteReview.objects.values('id_route').filter(id_route=id_route).annotate(avg=Avg('rating'))[0]['avg'])
+    get_avg_rating = models.RouteReview.objects.values('id_route').filter(id_route=id_route).annotate(avg=Avg('rating'))
+    avg_rating = get_avg_rating[0]['avg'] if len(get_avg_rating) > 0 else 'No rating'
+
 
     # With stop points id get info about stop points from MongoDB
     with MongoConnect(CONNECTION_STRING, 'test') as db:
