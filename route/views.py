@@ -8,6 +8,8 @@ from django.contrib.auth.models import User, Group
 
 from route import forms
 from route import models
+from utils.GetEnviromentVariable import get_environment_variables
+from utils.MongoDBConnect import MongoConnect, CONNECTION_STRING
 
 
 # Create your views here.
@@ -93,6 +95,12 @@ def route_detail(request, id_route):
     get_events = models.Event.objects.filter(id_route=id_route).all()
     get_review = models.RouteReview.objects.filter(id_route=id_route).all()
     avg_rating = int(models.RouteReview.objects.values('id_route').filter(id_route=id_route).annotate(avg=Avg('rating'))[0]['avg'])
+
+    with MongoConnect(CONNECTION_STRING, 'test') as db:
+        get_collection = db['Stop']
+        stop_points = get_collection.find_one()
+    get_route.stop_point = stop_points['Points']
+
     data = {
         'title': 'Info',
         'route': get_route,
