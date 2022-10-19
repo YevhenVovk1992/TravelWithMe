@@ -28,8 +28,14 @@
                                 <p class="mb-0 text-white-50">Location: {{ event.id_route.location }}</p>
                                 <p class="mb-0 text-white-50">Duration: {{ event.id_route.duration }}</p>
                                 <p class="mb-0 text-white-50">Guide: {{ event.guide }}</p>
-                                <p class="mb-0 text-white-50">Approved users: {{ event.approved_users }}</p>
-                                <p class="mb-0 text-white-50">Pending users: {{ event.pending_users }}</p>
+                                <p class="mb-0 text-white-50">Approved users:</p>
+                                {% for user in event.approved_users %}
+                                    <p class="mb-0 text-white-50">{{ user }}</p>
+                                {% endfor %}
+                                <p class="mb-0 text-white-50">Pending users:</p>
+                                {% for user in event.pending_users %}
+                                    <p class="mb-0 text-white-50">{{ user }}</p>
+                                {% endfor %}
                                 <p class="mb-0 text-white-50">Start date: {{ event.start_date }}</p>
                                 <p class="mb-0 text-white-50">Price: {{ event.price }}</p>
                                 <hr class="d-none d-lg-block mb-0 me-0" />

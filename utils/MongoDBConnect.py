@@ -2,6 +2,7 @@ from pymongo import MongoClient
 
 from utils.GetEnviromentVariable import get_environment_variables
 
+
 env = get_environment_variables()
 CONNECTION_STRING = env('MONGO_CONNECTION_STRING')
 
@@ -26,8 +27,8 @@ class MongoConnect:
 if __name__ == "__main__":
 
     with MongoConnect(CONNECTION_STRING, 'test') as db:
-        data = {'Points': [34, 5, 5]}
-        collection = db['Stop']
+        data = {'pending_users': [6, 9], 'approved_users': [3]}
+        collection = db['event_users']
         data_id = collection.insert_one(data).inserted_id
         print(data_id)
 

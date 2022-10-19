@@ -47,6 +47,7 @@ class RouteForm(forms.ModelForm):
     country = forms.CharField(max_length=50, label='Country')
     location = forms.CharField(max_length=50, label='Location')
     description = forms.CharField(widget=forms.Textarea)
+    stop_points = forms.CharField(widget=forms.Textarea)
     duration = forms.IntegerField()
 
     class Meta:

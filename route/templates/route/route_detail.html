@@ -48,8 +48,11 @@
                                 <hr class="d-none d-lg-block mb-0 ms-0" />
                                 <p class="mb-0 text-white-50">The beginning of the route: {{ route.start_point }}</p>
                                 <p class="mb-0 text-white-50">Description of the starting point: {{ route.start_point.info }}</p>
-                                {% if route.stop_point %}
-                                    <p class="mb-0 text-white-50">Points of interest: {{ route.stop_point }}</p>
+                                <p class="mb-0 text-white-50">Stop points:</p>
+                                {% if stop_points %}
+                                    {% for el in stop_points %}
+                                        <p class="mb-0 text-white-50"> - {{ el.name }}: {{ el.lat }}, {{ el.lon }}</p>
+                                    {% endfor %}
                                 {% endif %}
                                 <p class="mb-0 text-white-50">Destination: {{ route.destination }}</p>
                                 <p class="mb-0 text-white-50">Destination information:{{ route.destination.info }}</p>

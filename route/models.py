@@ -19,7 +19,7 @@ class Route(models.Model):
         Motor = 'Motor', gettext_lazy('Motor')
 
     start_point = models.ForeignKey(Place, null=False, related_name='start_route', on_delete=models.RESTRICT)
-    stop_point = models.JSONField(null=True)
+    stop_point = models.TextField(null=True)
     destination = models.ForeignKey(Place, null=False, related_name='stop_route', on_delete=models.RESTRICT)
     route_type = models.CharField(max_length=50, choices=RouteType.choices, default=RouteType.ByFoot, null=False)
     country = models.CharField(max_length=50, null=False)
@@ -45,8 +45,7 @@ class Route(models.Model):
 class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
     event_admin = models.IntegerField()
-    approved_users = models.TextField(null=True)
-    pending_users = models.TextField(null=True)
+    event_users = models.TextField(null=True)
     start_date = models.DateField(null=False)
     price = models.IntegerField(null=True)
 
@@ -55,8 +54,6 @@ class Event(models.Model):
             'id': self.pk,
             'id route': str(self.id_route),
             'event_admin': User.objects.get(pk=self.event_admin).username,
-            'approved_users': self.approved_users if self.approved_users is not None else '',
-            'pending_users': self.pending_users if self.pending_users is not None else '',
             'start_date': self.start_date,
             'price': self.price
         }

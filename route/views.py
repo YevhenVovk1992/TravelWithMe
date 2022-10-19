@@ -1,3 +1,6 @@
+import json
+
+from bson import ObjectId
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Subquery, OuterRef, Avg
@@ -51,6 +54,11 @@ def route_filter(request, **kwargs):
 
 @login_required(login_url='login')
 def add_route(request):
+    """
+        Function to add route if the user is registered and has permissions
+    :param request:
+    :return: HTML with Django form
+    """
     if request.user.has_perm('route.add_route'):
         form = forms.RouteForm()
         if request.method == 'GET':
@@ -66,6 +74,10 @@ def add_route(request):
                 'anchor': '#signup',
                 'operation_status': 'Operation successful'
             }
+            print(request.POST.get('stop_points'))
+            stop_points = json.loads(request.POST.get('stop_points'))
+            print(stop_points)
+
             try:
                 new_route = models.Route(
                     start_point=models.Place.objects.filter(id=request.POST.get('start_point'))[0],
@@ -91,27 +103,41 @@ def add_route(request):
 
 
 def route_detail(request, id_route):
+    """
+        Show detail information about route
+    :param request:
+    :param id_route: id route from DB
+    :return: HTML page
+    """
     get_route = models.Route.objects.filter(pk=id_route).first()
     get_events = models.Event.objects.filter(id_route=id_route).all()
     get_review = models.RouteReview.objects.filter(id_route=id_route).all()
+
+    # Get an average rating
     avg_rating = int(models.RouteReview.objects.values('id_route').filter(id_route=id_route).annotate(avg=Avg('rating'))[0]['avg'])
 
+    # With stop points id get info about stop points from MongoDB
     with MongoConnect(CONNECTION_STRING, 'test') as db:
-        get_collection = db['Stop']
-        stop_points = get_collection.find_one()
-    get_route.stop_point = stop_points['Points']
-
+        get_collection = db['stop_points']
+        stop_points = get_collection.find_one({'_id': ObjectId(get_route.stop_point)}).get('points')
     data = {
         'title': 'Info',
         'route': get_route,
         'events': get_events,
         'get_review': get_review,
-        'avg_rating': avg_rating
+        'avg_rating': avg_rating,
+        'stop_points': stop_points
     }
     return render(request, 'route/route_detail.html', data)
 
 
 def route_review(request, id_route):
+    """
+        Reviews and evaluation of the route
+    :param request:
+    :param id_route: id route from DB
+    :return: HTML page
+    """
     if request.method == 'GET':
         get_reviews = models.RouteReview.objects.filter(id_route=id_route).all()
         data = {
@@ -159,11 +185,28 @@ def route_add_event(request, id_route):
 
 
 @login_required(login_url='login')
-def event_handler(request, event_id):
+def event_handler(request, event_id: int):
+    """
+        Output information about the event if the user is logged in
+    :param request:
+    :param event_id: event id from DB
+    :return: HTML page
+    """
     if request.user.has_perm('route.view_event'):
         get_event = models.Event.objects.filter(pk=event_id).annotate(
             guide=Subquery(User.objects.filter(pk=OuterRef('event_admin')).values('username'))
         ).first()
+
+        # Get id users from MongoDB use id of the string from event table
+        with MongoConnect(CONNECTION_STRING, 'test') as db:
+            get_collection = db['event_users']
+            id_event_users = get_collection.find_one({'_id': ObjectId(get_event.event_users)})
+            approved_users = User.objects.filter(pk__in=id_event_users.get('approved_users')).all()
+            pending_users = User.objects.filter(pk__in=id_event_users.get('pending_users')).all()
+
+        # Add to the event model new parameters
+        get_event.approved_users = [itm.username for itm in approved_users]
+        get_event.pending_users = [itm.username for itm in pending_users]
         data = {
             'title': 'Event Info',
             'event': get_event
