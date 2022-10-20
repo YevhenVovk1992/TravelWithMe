@@ -11,6 +11,11 @@ class Place(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Route place'
+        verbose_name_plural = 'Route place'
+
 
 class Route(models.Model):
     class RouteType(models.TextChoices):
@@ -79,6 +84,10 @@ class RouteReview(models.Model):
     rating = models.IntegerField(null=False)
     comment = models.TextField(null=True)
 
+    class Meta:
+        ordering = ['id', 'rating']
+        verbose_name = 'Route review'
+        verbose_name_plural = 'Route review'
 
 class ChoiceTypeAccount:
     _CHOICES_LIST = [(itm.pk, itm.name) for itm in Group.objects.all()]
