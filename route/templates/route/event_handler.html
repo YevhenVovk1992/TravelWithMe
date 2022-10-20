@@ -17,7 +17,6 @@
                 <div class="bg-black text-center h-100 project">
                     <div class="d-flex h-100">
                         <div class="project-text w-100 my-auto text-center text-lg-right">
-
                             <div class="route_reviews">
                                 <h4 class="text-white">Event details</h4>
                                 <br>
@@ -40,6 +39,9 @@
                                 <p class="mb-0 text-white-50">Price: {{ event.price }}</p>
                                 <hr class="d-none d-lg-block mb-0 me-0" />
                             </div>
+                            {% if user.is_authenticated %}
+                                 <a class="btn btn-primary" href={% url 'add_me' event_id=event.pk %}>Join The Event</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

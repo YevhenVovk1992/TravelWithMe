@@ -11,8 +11,7 @@ from django.contrib.auth.models import User, Group
 
 from route import forms
 from route import models
-from utils.GetEnviromentVariable import get_environment_variables
-from utils.MongoDBConnect import MongoConnect, CONNECTION_STRING
+from utils.MongoDBConnect import MongoConnect, CONNECTION_STRING, CONNECTION_DB
 
 
 # Create your views here.
@@ -76,7 +75,7 @@ def add_route(request):
             }
             stop_point_data = json.loads(request.POST.get('stop_points'))
             try:
-                with MongoConnect(CONNECTION_STRING, 'test') as db:
+                with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
                     id_stop_points = db['stop_points'].insert_one({'points': stop_point_data}).inserted_id
                 new_route = models.Route(
                     start_point=models.Place.objects.filter(id=request.POST.get('start_point'))[0],
@@ -102,7 +101,7 @@ def add_route(request):
         return render(request, 'route/error.html', data)
 
 
-def route_detail(request, id_route):
+def route_detail(request, id_route: int):
     """
         Show detail information about route
     :param request:
@@ -117,9 +116,8 @@ def route_detail(request, id_route):
     get_avg_rating = models.RouteReview.objects.values('id_route').filter(id_route=id_route).annotate(avg=Avg('rating'))
     avg_rating = get_avg_rating[0]['avg'] if len(get_avg_rating) > 0 else 'No rating'
 
-
     # With stop points id get info about stop points from MongoDB
-    with MongoConnect(CONNECTION_STRING, 'test') as db:
+    with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
         get_collection = db['stop_points']
         stop_points = get_collection.find_one({'_id': ObjectId(get_route.stop_point)}).get('points')
     data = {
@@ -133,7 +131,7 @@ def route_detail(request, id_route):
     return render(request, 'route/route_detail.html', data)
 
 
-def route_review(request, id_route):
+def route_review(request, id_route: int):
     """
         Reviews and evaluation of the route
     :param request:
@@ -150,7 +148,7 @@ def route_review(request, id_route):
 
 
 @login_required(login_url='login')
-def route_add_event(request, id_route):
+def route_add_event(request, id_route: int):
     if request.user.has_perm('route.add_event'):
         if request.method == 'GET':
             form = forms.EventForm(initial={'id_route': id_route})
@@ -200,15 +198,19 @@ def event_handler(request, event_id: int):
         ).first()
 
         # Get id users from MongoDB use id of the string from event table
-        with MongoConnect(CONNECTION_STRING, 'test') as db:
+        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
             get_collection = db['event_users']
             id_event_users = get_collection.find_one({'_id': ObjectId(get_event.event_users)})
-            approved_users = User.objects.filter(pk__in=id_event_users.get('approved_users')).all()
-            pending_users = User.objects.filter(pk__in=id_event_users.get('pending_users')).all()
 
-        # Add to the event model new parameters
-        get_event.approved_users = [itm.username for itm in approved_users]
-        get_event.pending_users = [itm.username for itm in pending_users]
+            # Add to the event model new parameters
+            if id_event_users is None:
+                get_event.approved_users = ['No approved users']
+                get_event.pending_users = ['No pending users']
+            else:
+                approved_users = User.objects.filter(pk__in=id_event_users.get('approved_users')).all()
+                pending_users = User.objects.filter(pk__in=id_event_users.get('pending_users')).all()
+                get_event.approved_users = [itm.username for itm in approved_users]
+                get_event.pending_users = [itm.username for itm in pending_users]
         data = {
             'title': 'Event Info',
             'event': get_event
@@ -220,6 +222,51 @@ def event_handler(request, event_id: int):
             'operation_status': 'No access'
         }
         return render(request, 'route/error.html', data)
+
+
+@login_required(login_url='login')
+def add_me_to_event(request, event_id: int):
+    """
+        Adding users to the event
+    :param request:
+    :param event_id: id event
+    :return: HTTP page
+    """
+    if request.user.has_perm('route.view_event'):
+        id_user = request.user.pk
+        event = models.Event.objects.filter(pk=event_id).first()
+        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+            get_collection = db['event_users']
+            event_users = get_collection.find_one({'_id': ObjectId(event.event_users)})
+            pending_users = event_users.get('pending_users') if event_users is not None else []
+            approved_users = event_users.get('approved_users') if event_users is not None else []
+
+            # Checking if the user has applied
+            if id_user in approved_users or id_user in pending_users:
+                data = {
+                    'title': 'New pending user',
+                    'operation_status': 'You have already applied!'
+                }
+                return render(request, 'route/error.html', data)
+            else:
+                pending_users.append(id_user)
+
+                # Update the record if it exists in the database. If not, create a new one
+                if event_users is not None:
+                    get_collection.update_one(
+                        {'_id': ObjectId(event.event_users)}, {'$set': {'pending_users': pending_users}}
+                    )
+                else:
+                    id_collection = get_collection.insert_one(
+                        {'approved_users': approved_users, 'pending_users': pending_users}
+                    ).inserted_id
+                    event.event_users = id_collection
+                    event.save()
+        data = {
+            'title': 'New pending user',
+            'operation_status': f'You have applied for participation in the tour along the route {event.id_route.pk}'
+        }
+        return render(request, 'route/successful.html', data)
 
 
 def event_all(request):

@@ -5,6 +5,7 @@ from utils.GetEnviromentVariable import get_environment_variables
 
 env = get_environment_variables()
 CONNECTION_STRING = env('MONGO_CONNECTION_STRING')
+CONNECTION_DB = 'test'
 
 
 class MongoConnect:

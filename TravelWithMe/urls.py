@@ -26,5 +26,6 @@ urlpatterns = [
     path('route/', include("route.urls")),
     path('event', views.event_all, name='event_all'),
     path('event/<int:event_id>', views.event_handler, name='event_handler'),
+    path('event/<int:event_id>/add_me', views.add_me_to_event, name='add_me'),
     path('user/<str:username>', views.user_info, name='user_info')
 ]
