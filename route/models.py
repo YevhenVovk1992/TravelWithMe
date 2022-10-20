@@ -11,6 +11,11 @@ class Place(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Route place'
+        verbose_name_plural = 'Route place'
+
 
 class Route(models.Model):
     class RouteType(models.TextChoices):
@@ -41,6 +46,11 @@ class Route(models.Model):
             'duration': self.duration
         }
 
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Route'
+        verbose_name_plural = 'Travel route'
+
 
 class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
@@ -58,11 +68,20 @@ class Event(models.Model):
             'price': self.price
         }
 
+    class Meta:
+        ordering = ['start_date']
+        verbose_name = 'Event'
+        verbose_name_plural = 'Travel event'
+
 
 class RouteReview(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route_review', on_delete=models.RESTRICT)
     rating = models.IntegerField(null=False)
     comment = models.TextField(null=True)
 
+    class Meta:
+        ordering = ['id', 'rating']
+        verbose_name = 'Route review'
+        verbose_name_plural = 'Route review'
 
 
