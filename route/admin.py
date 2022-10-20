@@ -9,7 +9,22 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ['id_route', 'event_admin']
 
 
+class RouteAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'start_point',
+        'stop_point',
+        'destination',
+        'route_type',
+        'country',
+        'location',
+        'description',
+        'duration' ]
+    list_display_links = ['id']
+    list_filter = ['route_type', 'country', 'location', 'duration']
+
+
 admin.site.register(Place)
-admin.site.register(Route)
+admin.site.register(Route, RouteAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(RouteReview)

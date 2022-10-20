@@ -43,6 +43,11 @@ class Route(models.Model):
             'duration': self.duration
         }
 
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Route'
+        verbose_name_plural = 'Travel route'
+
 
 class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
