@@ -313,6 +313,7 @@ def user_login(request):
                 return redirect('registration')
 
 
+@login_required(login_url='login')
 def user_logout(request):
     logout(request)
     return redirect('index')
@@ -342,6 +343,7 @@ def registration(request):
             return render(request, 'route/error.html', data)
 
 
+@login_required(login_url='login')
 def user_info(request, username):
     try:
         active_user = request.session['_auth_user_id']
@@ -356,3 +358,51 @@ def user_info(request, username):
         return render(request, 'route/user_info.html', data)
     else:
         return HttpResponseNotFound('<h1>No user info</h1>')
+
+
+@login_required(login_url='login')
+def user_to_approved(request, event_id: int):
+    if request.user.is_superuser:
+        event = models.Event.objects.filter(pk=event_id).first()
+        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+            get_collection = db['event_users']
+            event_users = get_collection.find_one({'_id': ObjectId(event.event_users)})
+            id_pending_users = event_users.get('pending_users') if event_users is not None else []
+            id_approved_users = event_users.get('approved_users') if event_users is not None else []
+        pending_users = User.objects.in_bulk(id_pending_users)
+        approved_users = User.objects.in_bulk(id_approved_users)
+        if request.method == 'GET':
+            form_pending = forms.ChangeUserToApproved(users_dict=pending_users)
+            form_approved = forms.ChangeUserToPending(users_dict=approved_users)
+            data = {
+                'title': 'Event users',
+                'approved_users': approved_users,
+                'form_pending': form_pending,
+                'form_approved': form_approved
+            }
+            return render(request, 'route/pending_user_to_approved.html', data)
+        if request.method == 'POST':
+            users_to_approved = request.POST.get('users_to_approved')
+            users_to_approved_status = request.POST.get('users_to_approved_status')
+            users_to_pending = request.POST.get('users_to_pending')
+            users_to_pending_status = request.POST.get('users_to_pending_status')
+
+            # Perform operations according to the condition
+            if users_to_approved and users_to_approved_status[0] == '1':
+                id_pending_users.remove(int(users_to_approved))
+                id_approved_users.append(int(users_to_approved))
+            elif users_to_pending and users_to_pending_status[0] == '1':
+                id_pending_users.append(int(users_to_pending))
+                id_approved_users.remove(int(users_to_pending))
+            elif users_to_approved and users_to_approved_status[0] == '2':
+                id_pending_users.remove(int(users_to_approved))
+            elif users_to_pending and users_to_pending_status[0] == '2':
+                id_approved_users.remove(int(users_to_pending))
+            with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+                get_collection = db['event_users']
+                get_collection.update_one(
+                    {'_id': ObjectId(event.event_users)}, {'$set': {'pending_users': id_pending_users, 'approved_users': id_approved_users}}
+                )
+            return redirect(user_to_approved, event_id=event_id)
+    else:
+        return HttpResponseNotFound('<h1>No access</h1>')

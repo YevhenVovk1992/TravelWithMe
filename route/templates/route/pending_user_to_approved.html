@@ -1,0 +1,61 @@
+{% extends 'route/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block start_button %}
+<a class="btn btn-primary" href="#event_users">Get Started</a>
+{% endblock %}
+
+
+{% block content %}
+<section class="projects-section bg-light" id="event_users">
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+        <div class="col-lg-6 order-lg-first" style="width: 100%;">
+                <div class="bg-black text-center h-100 project">
+                    <div class="d-flex h-100">
+                        <div class="project-text w-100 my-auto text-center text-lg-right">
+                            <div class="event_users">
+                                <h4 class="text-white" >Approved users</h4>
+                                <hr class="d-none d-lg-block mb-0 ms-0" />
+                                <form method="post" >
+                                    {% csrf_token %}
+                                    <div class="row">
+                                      <div class="col-6">
+                                        {{ form_approved.users_to_pending|as_crispy_field }}
+                                      </div>
+                                      <div class="col-6">
+                                        {{ form_approved.users_to_pending_status|as_crispy_field }}
+                                      </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </form>
+                            </div>
+                            <div class="event_users">
+                                <h4 class="text-white">Pending users</h4>
+                                <form method="post" >
+                                    {% csrf_token %}
+                                    <div class="row">
+                                      <div class="col-6">
+                                        {{ form_pending.users_to_approved|as_crispy_field }}
+                                      </div>
+                                      <div class="col-6">
+                                        {{ form_pending.users_to_approved_status|as_crispy_field }}
+                                      </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

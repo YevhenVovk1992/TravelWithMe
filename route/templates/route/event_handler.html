@@ -5,12 +5,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block start_button %}
-<a class="btn btn-primary" href="#routes">Get Started</a>
+<a class="btn btn-primary" href="#event">Get Started</a>
 {% endblock %}
 
 
 {% block content %}
-<section class="projects-section bg-light" id="routes">
+<section class="projects-section bg-light" id="event">
     <div class="container px-4 px-lg-5">
     <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
         <div class="col-lg-6 order-lg-first" style="width: 100%;">
@@ -42,11 +42,12 @@
                             {% if user.is_authenticated %}
                                  <a class="btn btn-primary" href={% url 'add_me' event_id=event.pk %}>Join The Event</a>
                             {% endif %}
+                            {% if user.is_superuser %}
+                                <a class="btn btn-primary" href={% url 'user_to_approved' event_id=event.pk %}>Change member status</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            </div>
-
             </div>
         </div>
     </div>

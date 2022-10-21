@@ -76,3 +76,27 @@ class RouteFilter(forms.Form):
     route_type = forms.ChoiceField(choices=models.Route.RouteType.choices)
     location = forms.ChoiceField(choices=ChoiceTypeAccount.choices_location())
     country = forms.ChoiceField(widget=forms.Select(), choices=ChoiceTypeAccount.choices_country())
+
+
+class ChangeUserToPending(forms.Form):
+    users_to_pending = forms.MultipleChoiceField(label='Users', choices=[])
+    users_to_pending_status = forms.MultipleChoiceField(
+        label='Status', choices=[(0, 'to approved'), (1, 'to pending'), (2, 'delete')]
+    )
+
+    def __init__(self, users_dict=None, *args, **kwargs):
+        super(ChangeUserToPending, self).__init__(*args, **kwargs)
+        if users_dict:
+            self.fields['users_to_pending'].choices = list(users_dict.items())
+
+
+class ChangeUserToApproved(forms.Form):
+    users_to_approved = forms.MultipleChoiceField(label='Users', choices=[])
+    users_to_approved_status = forms.MultipleChoiceField(
+        label='Status', choices=[(1, 'to approved'), (0, 'to pending'), (2, 'delete')]
+    )
+
+    def __init__(self, users_dict=None, *args, **kwargs):
+        super(ChangeUserToApproved, self).__init__(*args, **kwargs)
+        if users_dict:
+            self.fields['users_to_approved'].choices = list(users_dict.items())
