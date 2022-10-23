@@ -1,6 +1,9 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy
 from django.contrib.auth.models import User, Group
+
+from utils.Validators import DateValidator
 
 
 # Create your models here.
@@ -56,8 +59,14 @@ class Event(models.Model):
     id_route = models.ForeignKey(Route, null=False, related_name='route', on_delete=models.RESTRICT)
     event_admin = models.IntegerField()
     event_users = models.TextField(null=True)
-    start_date = models.DateField(null=False)
-    price = models.IntegerField(null=True)
+    start_date = models.DateField(null=False, validators=[DateValidator.data_validate])
+    price = models.IntegerField(
+        null=True,
+        validators=[MinValueValidator(
+            limit_value=1,
+            message='Price must be greater then 0'
+        )]
+    )
 
     def to_dict(self):
         return {

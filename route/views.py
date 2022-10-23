@@ -170,6 +170,7 @@ def route_add_event(request, id_route: int):
                     start_date=request.POST.get('start_date'),
                     price=request.POST.get('price')
                 )
+                new_event.full_clean()
                 new_event.save()
             except Exception as error:
                 data['operation_status'] = error
