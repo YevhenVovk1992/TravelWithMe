@@ -3,6 +3,7 @@ import json
 from bson import ObjectId
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import Subquery, OuterRef, Avg
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
@@ -11,7 +12,7 @@ from django.contrib.auth.models import User, Group
 
 from route import forms
 from route import models
-from utils.MongoDBConnect import MongoConnect, CONNECTION_STRING, CONNECTION_DB
+from utils.MongoDBConnect import MongoConnect
 
 
 # Create your views here.
@@ -44,10 +45,25 @@ def index(request):
 
 def route_filter(request, **kwargs):
     route_list = models.Route.objects.filter(**kwargs).all()
-    data = {
-        'title': 'Routes',
-        'route_list': [itm.to_dict() for itm in route_list]
-    }
+    paginator = Paginator(route_list, 5)
+    page_number = int(request.GET.get('page', default=1))
+
+    # Make a paginator if there are more than 5 records in the database
+    if paginator.num_pages >= page_number:
+        page_obj = paginator.page(page_number)
+        all_pages = paginator.num_pages
+        next_page = page_obj.next_page_number() if page_number < paginator.num_pages else paginator.num_pages
+        previous_page = page_obj.previous_page_number() if page_number > 1 else 1
+        data = {
+            'title': 'Routes',
+            'paginator': {'next': next_page, 'previous': previous_page, 'all': all_pages, 'now': page_number},
+            'route_list': [itm.to_dict() for itm in page_obj]
+        }
+    else:
+        data = {
+            'title': 'Routes',
+            'route_list': [itm.to_dict() for itm in route_list]
+        }
     return render(request, 'route/route_filter.html', data)
 
 
@@ -73,9 +89,13 @@ def add_route(request):
                 'anchor': '#signup',
                 'operation_status': 'Operation successful'
             }
-            stop_point_data = json.loads(request.POST.get('stop_points'))
             try:
-                with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+                stop_point_data = json.loads(r'{}'.format(request.POST.get('stop_points')))
+            except Exception as error:
+                data['operation_status'] = error
+                return render(request, 'route/error.html', data)
+            try:
+                with MongoConnect() as db:
                     id_stop_points = db['stop_points'].insert_one({'points': stop_point_data}).inserted_id
                 new_route = models.Route(
                     start_point=models.Place.objects.filter(id=request.POST.get('start_point'))[0],
@@ -87,6 +107,7 @@ def add_route(request):
                     description=request.POST.get('description'),
                     duration=request.POST.get('duration')
                 )
+                new_route.full_clean()
                 new_route.save()
             except Exception as error:
                 data['operation_status'] = error
@@ -117,7 +138,7 @@ def route_detail(request, id_route: int):
     avg_rating = get_avg_rating[0]['avg'] if len(get_avg_rating) > 0 else 'No rating'
 
     # With stop points id get info about stop points from MongoDB
-    with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+    with MongoConnect() as db:
         get_collection = db['stop_points']
         stop_points = get_collection.find_one({'_id': ObjectId(get_route.stop_point)}).get('points')
     data = {
@@ -199,7 +220,7 @@ def event_handler(request, event_id: int):
         ).first()
 
         # Get id users from MongoDB use id of the string from event table
-        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+        with MongoConnect() as db:
             get_collection = db['event_users']
             id_event_users = get_collection.find_one({'_id': ObjectId(get_event.event_users)})
 
@@ -236,7 +257,7 @@ def add_me_to_event(request, event_id: int):
     if request.user.has_perm('route.view_event'):
         id_user = request.user.pk
         event = models.Event.objects.filter(pk=event_id).first()
-        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+        with MongoConnect() as db:
             get_collection = db['event_users']
             event_users = get_collection.find_one({'_id': ObjectId(event.event_users)})
             pending_users = event_users.get('pending_users') if event_users is not None else []
@@ -365,7 +386,7 @@ def user_info(request, username):
 def user_to_approved(request, event_id: int):
     if request.user.is_superuser:
         event = models.Event.objects.filter(pk=event_id).first()
-        with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+        with MongoConnect() as db:
             get_collection = db['event_users']
             event_users = get_collection.find_one({'_id': ObjectId(event.event_users)})
             id_pending_users = event_users.get('pending_users') if event_users is not None else []
@@ -399,7 +420,7 @@ def user_to_approved(request, event_id: int):
                 id_pending_users.remove(int(users_to_approved))
             elif users_to_pending and users_to_pending_status[0] == '2':
                 id_approved_users.remove(int(users_to_pending))
-            with MongoConnect(CONNECTION_STRING, CONNECTION_DB) as db:
+            with MongoConnect() as db:
                 get_collection = db['event_users']
                 get_collection.update_one(
                     {'_id': ObjectId(event.event_users)}, {'$set': {'pending_users': id_pending_users, 'approved_users': id_approved_users}}

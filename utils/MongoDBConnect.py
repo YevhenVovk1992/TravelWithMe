@@ -3,21 +3,19 @@ from pymongo import MongoClient
 from utils.GetEnviromentVariable import get_environment_variables
 
 
-env = get_environment_variables()
-CONNECTION_STRING = env('MONGO_CONNECTION_STRING')
-CONNECTION_DB = 'test'
-
-
 class MongoConnect:
+    env = get_environment_variables()
+    __CONNECTION_STRING = env('MONGO_CONNECTION_STRING')
+    __CONNECTION_DB = 'test'
 
-    def __init__(self, str_connect, database):
-        self.str_connect = str_connect
-        self.database = database
+    def __init__(self):
+        self.__database = MongoConnect.__CONNECTION_DB
+        self.__str_connect = MongoConnect.__CONNECTION_STRING
         self.client = None
 
     def __enter__(self):
-        self.client = MongoClient(self.str_connect)
-        database = self.client[self.database]
+        self.client = MongoClient(self.__str_connect)
+        database = self.client[self.__database]
         return database
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -25,9 +23,10 @@ class MongoConnect:
             self.client.close()
 
 
+
 if __name__ == "__main__":
 
-    with MongoConnect(CONNECTION_STRING, 'test') as db:
+    with MongoConnect() as db:
         data = {'pending_users': [6, 9], 'approved_users': [3]}
         collection = db['event_users']
         data_id = collection.insert_one(data).inserted_id

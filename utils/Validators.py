@@ -1,3 +1,5 @@
+import json
+
 from django.utils import timezone
 from django.core import exceptions
 
@@ -9,4 +11,4 @@ class DateValidator:
         now_date = timezone.now().date()
         if date <= now_date:
             raise exceptions.ValidationError('Enter correct date')
-
+        return date

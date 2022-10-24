@@ -33,7 +33,13 @@ class Route(models.Model):
     country = models.CharField(max_length=50, null=False)
     location = models.CharField(max_length=120, null=False)
     description = models.TextField(null=True)
-    duration = models.IntegerField(null=False, default=7)
+    duration = models.IntegerField(
+        null=False,
+        default=7,
+        validators=[MinValueValidator(limit_value=1,
+                                      message='Duration cannot be less than 1'
+                                      )]
+    )
 
     def __str__(self):
         return f'Route №{self.pk} {self.route_type}-{self.country}-{self.location}-{self.start_point}-{self.destination}'
