@@ -37,6 +37,26 @@
                 {% endfor %}
                 </tbody>
                 </table>
+                {% if paginator %}
+                    <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card-body text-center">
+                            <a class="btn btn-primary" href="?page={{ paginator.previous }}">Previous Page</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card-body text-center">
+                            <p>{{ paginator.now }}/{{ paginator.all }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card-body text-center">
+                            <a class="btn btn-primary" href="?page={{ paginator.next }}">Next Page</a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4 mx-auto" />
+                {% endif %}
                 {% if user.is_authenticated %}
                     <a class="btn btn-primary" href={% url 'route:add_event' id_route=0 %}>Add event</a>
                 {% endif %}

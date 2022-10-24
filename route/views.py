@@ -293,10 +293,24 @@ def add_me_to_event(request, event_id: int):
 
 def event_all(request):
     all_event = models.Event.objects.all()
-    data = {
-        'title': 'All Events',
-        'all_event': [itm.to_dict() for itm in all_event]
-    }
+    paginator = Paginator(all_event, 5)
+    page_number = int(request.GET.get('page', default=1))
+
+    if paginator.num_pages >= page_number:
+        page_obj = paginator.page(page_number)
+        all_pages = paginator.num_pages
+        next_page = page_obj.next_page_number() if page_number < paginator.num_pages else paginator.num_pages
+        previous_page = page_obj.previous_page_number() if page_number > 1 else 1
+        data = {
+            'title': 'All Events',
+            'paginator': {'next': next_page, 'previous': previous_page, 'all': all_pages, 'now': page_number},
+            'all_event': [itm.to_dict() for itm in page_obj]
+        }
+    else:
+        data = {
+            'title': 'All Events',
+            'all_event': [itm.to_dict() for itm in all_event]
+        }
     return render(request, 'route/all_events.html', data)
 
 
