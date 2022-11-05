@@ -6,7 +6,7 @@ from utils.GetEnviromentVariable import get_environment_variables
 class MongoConnect:
     env = get_environment_variables()
     __CONNECTION_STRING = env('MONGO_CONNECTION_STRING')
-    __CONNECTION_DB = 'test'
+    __CONNECTION_DB = 'TravelWithMe_DB'
 
     def __init__(self):
         self.__database = MongoConnect.__CONNECTION_DB

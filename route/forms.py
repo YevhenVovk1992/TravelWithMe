@@ -8,13 +8,18 @@ from django.contrib.auth.models import User, Group
 
 
 class ChoiceTypeAccount:
-    _CHOICES_LIST = [(itm.pk, itm.name.capitalize) for itm in Group.objects.all()]
-    _CHOICES_LIST_LOCATION = [(itm["location"], itm["location"].capitalize) for i, itm in enumerate(
-        models.Route.objects.values('location').annotate(count=Count('location')).order_by()
-    )]
-    _CHOICES_LIST_COUNTRY = [(itm["country"], itm["country"].capitalize) for i, itm in enumerate(
-        models.Route.objects.values('country').annotate(count=Count('country')).order_by()
-    )]
+    try:
+        _CHOICES_LIST = [(itm.pk, itm.name.capitalize) for itm in Group.objects.all()]
+        _CHOICES_LIST_LOCATION = [(itm["location"], itm["location"].capitalize) for i, itm in enumerate(
+            models.Route.objects.values('location').annotate(count=Count('location')).order_by()
+        )]
+        _CHOICES_LIST_COUNTRY = [(itm["country"], itm["country"].capitalize) for i, itm in enumerate(
+            models.Route.objects.values('country').annotate(count=Count('country')).order_by()
+        )]
+    except:
+        _CHOICES_LIST = []
+        _CHOICES_LIST_LOCATION = []
+        _CHOICES_LIST_COUNTRY = []
 
     @classmethod
     def choices_type(cls):

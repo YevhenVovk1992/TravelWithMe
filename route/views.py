@@ -49,7 +49,7 @@ def route_filter(request, **kwargs):
     page_number = int(request.GET.get('page', default=1))
 
     # Make a paginator if there are more than 5 records in the database
-    if paginator.num_pages >= page_number:
+    if paginator.num_pages >= page_number and paginator.num_pages > 1:
         page_obj = paginator.page(page_number)
         all_pages = paginator.num_pages
         next_page = page_obj.next_page_number() if page_number < paginator.num_pages else paginator.num_pages
@@ -110,6 +110,7 @@ def add_route(request):
                 new_route.full_clean()
                 new_route.save()
             except Exception as error:
+                print(error)
                 data['operation_status'] = error
                 return render(request, 'route/error.html', data)
             else:
@@ -185,9 +186,15 @@ def route_add_event(request, id_route: int):
                 'operation_status': 'Operation successful'
             }
             try:
+                with MongoConnect() as db:
+                    get_collection = db['event_users']
+                    event_users = get_collection.insert_one(
+                        {'approved_users': [], 'pending_users': []}
+                    )
                 new_event = models.Event(
                     id_route=models.Route.objects.filter(id=request.POST.get('id_route'))[0],
                     event_admin=request.POST.get('event_admin'),
+                    event_users=event_users.inserted_id,
                     start_date=request.POST.get('start_date'),
                     price=request.POST.get('price')
                 )
@@ -296,7 +303,7 @@ def event_all(request):
     paginator = Paginator(all_event, 5)
     page_number = int(request.GET.get('page', default=1))
 
-    if paginator.num_pages >= page_number:
+    if paginator.num_pages >= page_number and paginator.num_pages > 1:
         page_obj = paginator.page(page_number)
         all_pages = paginator.num_pages
         next_page = page_obj.next_page_number() if page_number < paginator.num_pages else paginator.num_pages
