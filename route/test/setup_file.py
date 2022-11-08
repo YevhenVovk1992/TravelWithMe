@@ -41,10 +41,21 @@ class Setting(TestCase):
             first_name='test',
             last_name='test'
         )
+        cls.user = User(
+            id=2,
+            username='user',
+            email='test@test.com',
+            password='test',
+            first_name='test',
+            last_name='test'
+        )
+
         cls.event_admin.save()
+        cls.user.save()
         cls.test_place.save()
         cls.test_route.save()
         cls.test_route.save()
+
 
     @classmethod
     def tearDownClass(cls):
@@ -53,3 +64,4 @@ class Setting(TestCase):
         models.Route.objects.filter(id=1).delete()
         models.User.objects.filter(id=1).delete()
         models.Event.objects.filter(id=1).delete()
+        models.User.objects.filter(id=2).delete()

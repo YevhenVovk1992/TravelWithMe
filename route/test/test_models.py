@@ -1,11 +1,9 @@
-from django.test import TestCase
+from django.core.exceptions import ValidationError
 
 from route.test.setup_file import Setting
-from route import models
 
 
 class PlaceTestCase(Setting):
-
     def test_name(self):
         place = self.test_place
         self.assertEqual(place.name, 'test_place')
@@ -26,6 +24,13 @@ class EventTestCase(Setting):
         self.assertEqual(limit_value, 1)
         self.assertEqual(message, 'Duration cannot be less than 1')
 
+    def test_validator_duration_false(self):
+        invalid_validator = self.test_event
+        invalid_validator.duration = 9
+        with self.assertRaises(ValidationError):
+            invalid_validator.full_clean()
+            invalid_validator.save()
+
     def test_event_route(self):
         event = self.test_event
         self.assertEqual(event.id_route.country, 'test')
@@ -38,3 +43,5 @@ class EventTestCase(Setting):
         event_dict = event.to_dict()
         self.assertEqual(event_dict.get('id route'), 'Route №1 Car-test-test_location-test_place-test_place')
         self.assertEqual(event_dict.get('price'), 10)
+
+

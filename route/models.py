@@ -75,10 +75,14 @@ class Event(models.Model):
     )
 
     def to_dict(self):
+        try:
+            get_admin = User.objects.get(pk=self.event_admin).username
+        except:
+            get_admin = 0
         return {
             'id': self.pk,
             'id route': str(self.id_route),
-            'event_admin': User.objects.get(pk=self.event_admin).username,
+            'event_admin': get_admin,
             'start_date': self.start_date,
             'price': self.price
         }
