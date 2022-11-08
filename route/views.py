@@ -67,7 +67,6 @@ def route_filter(request, **kwargs):
     return render(request, 'route/route_filter.html', data)
 
 
-@login_required(login_url='login')
 def add_route(request):
     """
         Function to add route if the user is registered and has permissions
@@ -90,7 +89,7 @@ def add_route(request):
                 'operation_status': 'Operation successful'
             }
             try:
-                stop_point_data = json.loads(r'{}'.format(request.POST.get('stop_points')))
+                stop_point_data = json.loads(request.POST.get('stop_points'))
             except Exception as error:
                 data['operation_status'] = error
                 return render(request, 'route/error.html', data)
@@ -120,7 +119,7 @@ def add_route(request):
             'title': 'Add New Route',
             'operation_status': 'No access'
         }
-        return render(request, 'route/error.html', data)
+        return render(request, 'route/error.html', data, status=302)
 
 
 def route_detail(request, id_route: int):
@@ -169,7 +168,6 @@ def route_review(request, id_route: int):
         return render(request, 'route/route_review.html', data)
 
 
-@login_required(login_url='login')
 def route_add_event(request, id_route: int):
     if request.user.has_perm('route.add_event'):
         if request.method == 'GET':
@@ -210,7 +208,7 @@ def route_add_event(request, id_route: int):
             'title': 'Error',
             'operation_status': 'No access'
         }
-        return render(request, 'route/error.html', data)
+        return render(request, 'route/error.html', data, status=302)
 
 
 @login_required(login_url='login')
@@ -221,39 +219,31 @@ def event_handler(request, event_id: int):
     :param event_id: event id from DB
     :return: HTML page
     """
-    if request.user.has_perm('route.view_event'):
-        get_event = models.Event.objects.filter(pk=event_id).annotate(
-            guide=Subquery(User.objects.filter(pk=OuterRef('event_admin')).values('username'))
-        ).first()
+    get_event = models.Event.objects.filter(pk=event_id).annotate(
+        guide=Subquery(User.objects.filter(pk=OuterRef('event_admin')).values('username'))
+    ).first()
 
-        # Get id users from MongoDB use id of the string from event table
-        with MongoConnect() as db:
-            get_collection = db['event_users']
-            id_event_users = get_collection.find_one({'_id': ObjectId(get_event.event_users)})
+    # Get id users from MongoDB use id of the string from event table
+    with MongoConnect() as db:
+        get_collection = db['event_users']
+        id_event_users = get_collection.find_one({'_id': ObjectId(get_event.event_users)})
 
-            # Add to the event model new parameters
-            if id_event_users is None:
-                get_event.approved_users = ['No approved users']
-                get_event.pending_users = ['No pending users']
-            else:
-                approved_users = User.objects.filter(pk__in=id_event_users.get('approved_users')).all()
-                pending_users = User.objects.filter(pk__in=id_event_users.get('pending_users')).all()
-                get_event.approved_users = [itm.username for itm in approved_users]
-                get_event.pending_users = [itm.username for itm in pending_users]
-        data = {
-            'title': 'Event Info',
-            'event': get_event
-        }
-        return render(request, 'route/event_handler.html', data)
+    # Add to the event model new parameters
+    if id_event_users is None:
+        get_event.approved_users = ['No approved users']
+        get_event.pending_users = ['No pending users']
     else:
-        data = {
-            'title': 'Error',
-            'operation_status': 'No access'
-        }
-        return render(request, 'route/error.html', data)
+        approved_users = User.objects.filter(pk__in=id_event_users.get('approved_users')).all()
+        pending_users = User.objects.filter(pk__in=id_event_users.get('pending_users')).all()
+        get_event.approved_users = [itm.username for itm in approved_users]
+        get_event.pending_users = [itm.username for itm in pending_users]
+    data = {
+        'title': 'Event Info',
+        'event': get_event
+    }
+    return render(request, 'route/event_handler.html', data)
 
 
-@login_required(login_url='login')
 def add_me_to_event(request, event_id: int):
     """
         Adding users to the event
@@ -295,7 +285,7 @@ def add_me_to_event(request, event_id: int):
             'title': 'New pending user',
             'operation_status': f'You have applied for participation in the tour along the route {event.id_route.pk}'
         }
-        return render(request, 'route/successful.html', data)
+        return render(request, 'route/successful.html', data, status=302)
 
 
 def event_all(request):
@@ -403,7 +393,6 @@ def user_info(request, username):
         return HttpResponseNotFound('<h1>No user info</h1>')
 
 
-@login_required(login_url='login')
 def user_to_approved(request, event_id: int):
     if request.user.is_superuser:
         event = models.Event.objects.filter(pk=event_id).first()
