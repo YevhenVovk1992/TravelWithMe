@@ -5,7 +5,9 @@ from route import models
 
 
 class Setting(TestCase):
-
+    """
+        Create model's objects for test
+    """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -49,13 +51,11 @@ class Setting(TestCase):
             first_name='test',
             last_name='test'
         )
-
         cls.event_admin.save()
         cls.user.save()
         cls.test_place.save()
         cls.test_route.save()
         cls.test_route.save()
-
 
     @classmethod
     def tearDownClass(cls):

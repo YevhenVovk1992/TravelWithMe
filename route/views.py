@@ -171,7 +171,8 @@ def route_review(request, id_route: int):
 def route_add_event(request, id_route: int):
     if request.user.has_perm('route.add_event'):
         if request.method == 'GET':
-            form = forms.EventForm(initial={'id_route': id_route})
+            event_admin = request.session['_auth_user_id']
+            form = forms.EventForm(initial={'id_route': id_route, 'event_admin': event_admin})
             data = {
                 'title': 'Add New Event',
                 'form': form

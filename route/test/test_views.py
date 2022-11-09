@@ -1,8 +1,11 @@
-from django.contrib.auth.models import Permission, Group, User, AnonymousUser
+import unittest.mock
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import TestCase, RequestFactory, Client
 
 from route import views, models
 from route.test.setup_file import Setting
+from route.test.Mocks import MongoMock, UserMock
 
 
 # Create your tests here.
@@ -26,12 +29,6 @@ class AddRouteTestCase(TestCase):
             info='test_info'
         )
         self.place.save()
-
-        class UserMock:
-
-            def has_perm(self, *args, **kwargs):
-                return True
-
         self.user = UserMock()
 
     def test_for_anonymous_user(self):
@@ -112,3 +109,49 @@ class EventAllTestCase(Setting):
         response = self.client.get('/event')
         self.assertEqual(response.context['paginator'].get('all'), 2)
         self.assertEqual(len(models.Event.objects.all()), 10)
+
+
+class AddEventTestCase(Setting):
+    fixtures = ['route.json']
+
+    def setUp(self) -> None:
+        self.factory = RequestFactory()
+        self.user = UserMock()
+
+    def create_session(self, request):
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(request)
+        request.session.save()
+
+    def test_add_event_get(self):
+        request = self.factory.get('/route/1/add_event')
+        request.user = self.user
+        self.create_session(request)
+        request.session['_auth_user_id'] = 1
+        response = views.route_add_event(request, 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_with_anonymous_user(self):
+        request = self.factory.get('/route/1/add_event')
+        request.user = AnonymousUser()
+        response = views.route_add_event(request, 1)
+        self.assertEqual(response.status_code, 302)
+
+    @unittest.mock.patch('utils.MongoDBConnect.MongoClient', MongoMock)
+    def test_add_event_post(self):
+        form_data = {
+            'id_route': self.test_route.id,
+            'event_admin': 1,
+            'event_users': 'test',
+            'start_date': '2023-03-02',
+            'price': 5000
+        }
+        request = self.factory.post('/route/1/add_event', data=form_data)
+        request.user = self.user
+        self.create_session(request)
+        request.session['_auth_user_id'] = 1
+        self.assertEqual(len(models.Event.objects.all()), 6)
+        response = views.route_add_event(request, 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(models.Event.objects.all()), 7)
+        self.assertEqual(models.Event.objects.filter(price=5000).first().event_admin, 1)

@@ -1,0 +1,106 @@
+[
+{
+    "model": "route.place",
+    "pk": 1,
+    "fields": {
+        "name": "karpaty",
+        "info": "Mountains of Ukraine"
+    }
+},
+{
+    "model": "route.place",
+    "pk": 2,
+    "fields": {
+        "name": "alps",
+        "info": "The best mountains"
+    }
+},
+{
+    "model": "route.place",
+    "pk": 3,
+    "fields": {
+        "name": "Triglav",
+        "info": "Slovenia national park"
+    }
+},
+{
+    "model": "route.route",
+    "pk": 1,
+    "fields": {
+        "start_point": 1,
+        "stop_point": "63663a6f14a461bd66abbb78",
+        "destination": 1,
+        "route_type": "Foot",
+        "country": "Ukraine",
+        "location": "karpaty",
+        "description": "Foot route",
+        "duration": 4
+    }
+},
+{
+    "model": "route.event",
+    "pk": 2,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 2,
+        "event_users": "63663dc2b81a65eb9a36cb98",
+        "start_date": "2023-01-18",
+        "price": 5657
+    }
+},
+{
+    "model": "route.event",
+    "pk": 3,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 1,
+        "event_users": "636928275eec7fe8511245fb",
+        "start_date": "2024-12-03",
+        "price": 24555
+    }
+},
+{
+    "model": "route.event",
+    "pk": 4,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 3,
+        "event_users": "636928375eec7fe8511245fd",
+        "start_date": "2022-11-23",
+        "price": 345
+    }
+},
+{
+    "model": "route.event",
+    "pk": 5,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 5,
+        "event_users": "63692918714453cc9d8a20d2",
+        "start_date": "2022-11-30",
+        "price": 67
+    }
+},
+{
+    "model": "route.event",
+    "pk": 6,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 1,
+        "event_users": "63692929714453cc9d8a20d4",
+        "start_date": "2022-11-28",
+        "price": 5555
+    }
+},
+{
+    "model": "route.event",
+    "pk": 7,
+    "fields": {
+        "id_route": 1,
+        "event_admin": 1,
+        "event_users": "6369294e714453cc9d8a20d6",
+        "start_date": "2022-12-01",
+        "price": 567
+    }
+}
+]
